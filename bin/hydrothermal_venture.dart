@@ -32,29 +32,53 @@ class Line {
 
   List<Point>? straightPath() {
     final List<Point> path = [];
+
+    // Calculate verticals (i.e. x coord doesn't change)
     if (p1.x == p2.x) {
       // Get the difference between the y values
       final difference = (biggestY.y - smallestY.y);
       // Create a set of points between the two points
-      //? What if it is negative?
       for (int i = 0; i <= difference; i++) {
         path.add(Point(smallestY.x, smallestY.y + i));
       }
       return path;
     }
 
+    // Calculate horizontal (i.e. y coord doesn't change)
     if (p1.y == p2.y) {
       // Get the difference between the x values
       final difference = (biggestX.x - smallestX.x);
       // Create a set of points between the two points
-      //? What if it is negative?
       for (int i = 0; i <= difference; i++) {
         path.add(Point(smallestX.x + i, smallestX.y));
       }
       return path;
     }
 
-    return null;
+    // Calculate 45 degree diagonals
+    if ((p1.x - p2.x).abs() == (p1.y - p2.y).abs()) {
+      // Get the difference between the x values (could do y but it doesn't matter)
+      final differenceX = (biggestX.x - smallestX.x);
+      for (int i = 0; i <= differenceX; i++) {
+        // Top left -> bottom right
+        if (p1.x < p2.x) {
+          path.add(Point(p1.x + i, p1.y + i));
+        }
+        // Bottom right -> top left
+        else if (p1.x > p2.x) {
+          path.add(Point(p1.x - i, p1.y - i));
+        }
+        // Top right -> bottom left
+        else if (p1.y < p2.y) {
+          path.add(Point(p1.x - i, p1.y + i));
+        }
+        // Bottom left -> top right
+        else if (p1.y > p2.y) {
+          path.add(Point(p1.x + i, p1.y - i));
+        }
+      }
+      return path;
+    }
   }
 
   @override
